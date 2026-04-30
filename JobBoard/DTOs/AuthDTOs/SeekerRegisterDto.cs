@@ -18,7 +18,5 @@ namespace JobBoard.DTOs
         [MinLength(8)]//must be 8 chars long minimum
         public string Password { get; set; }= string.Empty;
 
-        [Required]//role must be included in the recieved data
-        public Role Role { get; set; }    
     }
 }
