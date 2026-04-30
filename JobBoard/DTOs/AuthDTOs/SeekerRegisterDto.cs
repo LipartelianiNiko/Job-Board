@@ -1,13 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using JobBoard.Models;
 
+//registration dto for seekers. no comany name needed,
 //data shape that user will be sending when registerin, will have name, email, password and role.
 namespace JobBoard.DTOs
 {
-    public class RegisterDto
+    public class SeekerRegisterDto
     {
         [Required]//name must be inlcuded in the recieved data
-        public string Name {  get; set; }=string.Empty;
+        public string FullName {  get; set; }=string.Empty;
 
         [Required]//eamil must be inlcuded in the recieved data
         [EmailAddress]//must be and email

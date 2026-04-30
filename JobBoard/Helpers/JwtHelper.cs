@@ -4,7 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using JobBoard.Models;
 
-
+//generate token and return it, will be used in authservice to send it to client
 
 namespace JobBoard.Helpers
 {

@@ -6,7 +6,7 @@ namespace JobBoard.DTOs.AuthDTOs
 {
     public class AuthResponseDto
     {
-        public string Name { get; set; } = string.Empty;
+        public string FullName { get; set; } = string.Empty;
         public Role Role { get; set; } 
         public string Token { get; set; } = string.Empty;
     }

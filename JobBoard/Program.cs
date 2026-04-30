@@ -1,8 +1,10 @@
-using Microsoft.EntityFrameworkCore;
+using JobBoard.Data;
+using JobBoard.Helpers;
+using JobBoard.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using JobBoard.Data;
 
 var builder = WebApplication.CreateBuilder(args);//create builder, configure before start
 
@@ -27,8 +29,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 builder.Services.AddAuthorization();
+
+//register modules.
+builder.Services.AddScoped<JwtHelper>();
+builder.Services.AddScoped<AuthService>();
+
 var app = builder.Build();//config is done
+
 app.UseAuthentication();//adds jwt middleware, ceck token on each request
+app.UseAuthorization();
 app.MapControllers();
 
 app.Run();//start the server

@@ -5,6 +5,7 @@
     {
         //each user has id, email, passwor, role.both roles have this, but employer doesnt need name at all.
         public int Id { get; set; }
+        public string FullName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
         public Role Role { get; set; }
