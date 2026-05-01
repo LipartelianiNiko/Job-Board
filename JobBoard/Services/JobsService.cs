@@ -22,6 +22,8 @@ namespace JobBoard.Services
             //Get the employer's profile from database using userId from JWT token
             var employerProfile= await _db.EmployerProfiles.FirstOrDefaultAsync(u => u.UserId ==UserId);
             if (employerProfile == null) throw new Exception("Employer profile not found");
+            if (dto.SalaryMin < 0) throw new Exception("Salary cannot be negative");
+            if (dto.SalaryMin > dto.SalaryMax) throw new Exception("SalaryMin cannot exceed SalaryMax");
 
             //Create Job object from DTO
             //Assign EmployerProfileId
