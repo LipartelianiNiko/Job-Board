@@ -17,6 +17,9 @@ namespace JobBoard.Controllers
             _jobsService = jobsService;
         }
 
+
+        //----------------POST create a job------------------//
+
         [Authorize(Roles = "Employer")]
         [HttpPost("jobs")]
         public async Task<IActionResult> CreateJob(CreateJobDto dto)
@@ -38,6 +41,7 @@ namespace JobBoard.Controllers
 
         }
 
+        //----------------GET all jobs--------------------//
 
         [HttpGet("jobs")]
         public async Task<IActionResult> GetJobs(
@@ -51,6 +55,24 @@ namespace JobBoard.Controllers
             try
             {
                 var result = await _jobsService.GetAllJobs(city, category, employmentType, search, page, pageSize);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+
+        }
+
+        //----------------------GET one job-------------//
+
+        [HttpGet("jobs/{id}")]
+        public async Task<IActionResult> GetJobById(int id)
+        {
+            try
+            {
+                var result = await _jobsService.GetJobById(id);
 
                 return Ok(result);
             }

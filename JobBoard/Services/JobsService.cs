@@ -122,5 +122,36 @@ namespace JobBoard.Services
                 TotalPages = (int)Math.Ceiling((double)totalCount / pageSize)
             };
         }
+
+
+        //---------get a single job-------------//
+
+        public async Task<JobResponseDto> GetJobById(int id)
+        {
+
+            var Job = await _db.Jobs
+                .Include(j => j.EmployerProfile)
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (Job == null) throw new Exception("Job not found");
+
+
+            return new JobResponseDto
+            {
+                Id = Job.Id,
+                CompanyName = Job.EmployerProfile.CompanyName,
+                Title = Job.Title,
+                Description = Job.Description,
+                SalaryMin = Job.SalaryMin,
+                SalaryMax = Job.SalaryMax,
+                City = Job.City,
+                Category = Job.Category,
+                EmploymentType = Job.EmploymentType,
+                Status = Job.Status,
+                CreatedAt = Job.CreatedAt
+            };
+
+
+        }
     }
 }
