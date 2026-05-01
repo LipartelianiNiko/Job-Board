@@ -162,6 +162,7 @@ namespace JobBoard.Services
             if (job == null) throw new Exception("Job not found");
             if (job.EmployerProfile.UserId != userId) throw new Exception("Unauthorized!");
 
+
             if (dto.Title != null) job.Title = dto.Title;
             if (dto.Description != null) job.Description = dto.Description;
             if (dto.City != null) job.City = dto.City;
@@ -189,5 +190,55 @@ namespace JobBoard.Services
                 CreatedAt = job.CreatedAt
             };
         }
+
+        //----------------UPDATE only the status-------------//
+        public async Task<JobResponseDto> UpdateJobStatus(int id, UpdateJobStatusDto dto, int userId)
+        {
+            var job = await _db.Jobs
+                .Include(j => j.EmployerProfile)
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (job == null) throw new Exception("Job not found");
+            if (job.EmployerProfile.UserId != userId) throw new Exception("Unauthorized!");
+            if (!Enum.IsDefined(typeof(JobStatus), dto.Status))
+                throw new Exception("Invalid status value");
+
+            job.Status = dto.Status;
+            job.UpdatedAt = DateTime.UtcNow;
+
+            await _db.SaveChangesAsync();
+
+            return new JobResponseDto
+            {
+                Id = job.Id,
+                CompanyName = job.EmployerProfile.CompanyName,
+                Title = job.Title,
+                Description = job.Description,
+                SalaryMin = job.SalaryMin,
+                SalaryMax = job.SalaryMax,
+                City = job.City,
+                Category = job.Category,
+                EmploymentType = job.EmploymentType,
+                Status = job.Status,
+                CreatedAt = job.CreatedAt
+            };
+        }
+
+        //-----------------------DELETE a job--------------//
+        public async Task DeleteJob(int id, int userId)
+        {
+            var job = await _db.Jobs
+                .Include(j => j.EmployerProfile)
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (job == null) throw new Exception("Job not found");
+            if (job.EmployerProfile.UserId != userId) throw new Exception("Unauthorized!");
+
+            _db.Jobs.Remove(job);
+            await _db.SaveChangesAsync();
+        }
+
+
+
     }
 }

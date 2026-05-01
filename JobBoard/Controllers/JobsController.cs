@@ -102,9 +102,46 @@ namespace JobBoard.Controllers
 
         }
 
-        //UpdateJob — employer edits job details
-        //DeleteJob — employer deletes job
-        //UpdateJobStatus — employer opens/closes job
+
+        //-------------------Update Job status---------------------//
+
+        [Authorize(Roles = "Employer")]
+        [HttpPatch("jobs/{id}/status")]
+        public async Task<IActionResult> UpdateJobStatus(int id, UpdateJobStatusDto dto)
+        {
+
+            try
+            {
+                var userId = int.Parse(User.FindFirst("userId").Value);
+                var result = await _jobsService.UpdateJobStatus(id, dto, userId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+
+        }
+
+        //--------------DELETE a job------------//
+        [Authorize(Roles = "Employer")]
+        [HttpDelete("jobs/{id}/delete")]
+        public async Task<IActionResult> DeleteJob(int id)
+        {
+
+            try
+            {
+                var userId = int.Parse(User.FindFirst("userId").Value);
+                await _jobsService.DeleteJob(id, userId);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+
+        }
+
         //GetEmployerJobs — employer sees their own listings
         //GetEmployerJobById - employer sees single listing with applications
 
