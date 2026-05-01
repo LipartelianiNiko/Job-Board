@@ -83,6 +83,31 @@ namespace JobBoard.Controllers
 
         }
 
+        //--------------------PATHC a job, modify---------------//
+        [Authorize(Roles = "Employer")]
+        [HttpPatch("jobs/{id}")]
+        public async Task<IActionResult> UpdateJob(int id, UpdateJobDto dto)
+        {
+
+            try
+            {
+                var userId = int.Parse(User.FindFirst("userId").Value);
+                var result = await _jobsService.UpdateJob(id, dto, userId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+
+        }
+
+        //UpdateJob — employer edits job details
+        //DeleteJob — employer deletes job
+        //UpdateJobStatus — employer opens/closes job
+        //GetEmployerJobs — employer sees their own listings
+        //GetEmployerJobById - employer sees single listing with applications
+
     }
 }
 

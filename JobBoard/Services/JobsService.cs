@@ -150,8 +150,44 @@ namespace JobBoard.Services
                 Status = Job.Status,
                 CreatedAt = Job.CreatedAt
             };
+        }
 
+        //------------update, pathc a job, modify-----------------//
+        public async Task<JobResponseDto> UpdateJob(int id,UpdateJobDto dto, int userId )
+        {
+            var job = await _db.Jobs
+                .Include(j => j.EmployerProfile)
+                .FirstOrDefaultAsync(u => u.Id == id);
 
+            if (job == null) throw new Exception("Job not found");
+            if (job.EmployerProfile.UserId != userId) throw new Exception("Unauthorized!");
+
+            if (dto.Title != null) job.Title = dto.Title;
+            if (dto.Description != null) job.Description = dto.Description;
+            if (dto.City != null) job.City = dto.City;
+            if (dto.SalaryMin != null) job.SalaryMin = dto.SalaryMin;
+            if (dto.SalaryMax != null) job.SalaryMax = dto.SalaryMax;
+            if (dto.Category != null) job.Category = dto.Category.Value;
+            if (dto.EmploymentType != null) job.EmploymentType = dto.EmploymentType.Value;
+
+            job.UpdatedAt = DateTime.UtcNow;
+
+            await _db.SaveChangesAsync();
+
+            return new JobResponseDto
+            {
+                Id = job.Id,
+                CompanyName = job.EmployerProfile.CompanyName,
+                Title = job.Title,
+                Description = job.Description,
+                SalaryMin = job.SalaryMin,
+                SalaryMax = job.SalaryMax,
+                City = job.City,
+                Category = job.Category,
+                EmploymentType = job.EmploymentType,
+                Status = job.Status,
+                CreatedAt = job.CreatedAt
+            };
         }
     }
 }
