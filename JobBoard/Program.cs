@@ -33,6 +33,7 @@ builder.Services.AddAuthorization();
 //register modules.
 builder.Services.AddScoped<JwtHelper>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<JobsService>();
 
 var app = builder.Build();//config is done
 

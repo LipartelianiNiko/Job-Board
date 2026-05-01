@@ -1,23 +1,20 @@
 ﻿using JobBoard.Models;
-using System.ComponentModel.DataAnnotations;
 
-namespace JobBoard.DTOs.Jobs
+namespace JobBoard.DTOs.JobsDTOs
 {
-    public class CreateJobDto
+    public class JobResponseDto
     {
-        [Required]
-        public string Title { get; set; } = string.Empty;
 
-        [Required]
+        public int Id { get; set; }
+        public string CompanyName { get; set; } = string.Empty;
+        public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public decimal? SalaryMin { get; set; }
         public decimal? SalaryMax { get; set; }
         public string? City { get; set; }
-
-        [Required]
         public JobCategory Category { get; set; }
-
-        [Required]
         public EmploymentType EmploymentType { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public JobStatus Status { get; set; } = JobStatus.Draft;
     }
 }
