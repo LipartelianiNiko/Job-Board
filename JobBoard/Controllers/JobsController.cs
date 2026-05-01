@@ -26,7 +26,7 @@ namespace JobBoard.Controllers
         {
             try{
                 //Extract userId from token
-                var userId = int.Parse(User.FindFirst("userId").Value);
+                var userId = int.Parse(User.FindFirst("userId")!.Value);
 
                 //Call service
                 var result = await _jobsService.CreateJob(dto, userId);
@@ -91,7 +91,7 @@ namespace JobBoard.Controllers
 
             try
             {
-                var userId = int.Parse(User.FindFirst("userId").Value);
+                var userId = int.Parse(User.FindFirst("userId")!.Value);
                 var result = await _jobsService.UpdateJob(id, dto, userId);
                 return Ok(result);
             }
@@ -112,7 +112,7 @@ namespace JobBoard.Controllers
 
             try
             {
-                var userId = int.Parse(User.FindFirst("userId").Value);
+                var userId = int.Parse(User.FindFirst("userId")!.Value);
                 var result = await _jobsService.UpdateJobStatus(id, dto, userId);
                 return Ok(result);
             }
@@ -131,7 +131,7 @@ namespace JobBoard.Controllers
 
             try
             {
-                var userId = int.Parse(User.FindFirst("userId").Value);
+                var userId = int.Parse(User.FindFirst("userId")!.Value);
                 await _jobsService.DeleteJob(id, userId);
                 return NoContent();
             }
@@ -142,7 +142,32 @@ namespace JobBoard.Controllers
 
         }
 
-        //GetEmployerJobs — employer sees their own listings
+        //GetEmployerJobs — employer sees all their listings
+        [Authorize(Roles = "Employer")]
+        [HttpGet("employer/jobs")]
+        public async Task<IActionResult> GetEmployerJobs(
+        [FromQuery] string? city,
+        [FromQuery] int? category,
+        [FromQuery] int? employmentType,
+        [FromQuery] string? search,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10)
+        {
+            try
+            {
+                var userId = int.Parse(User.FindFirst("userId")!.Value);
+                var result = await _jobsService.GetEmployerJobs(userId, city, category, employmentType, search, page, pageSize);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+
+        }
+
+
         //GetEmployerJobById - employer sees single listing with applications
 
     }
