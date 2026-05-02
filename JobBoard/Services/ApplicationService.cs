@@ -115,5 +115,72 @@ namespace JobBoard.Services
             };
         }
 
+        //----------withdraw, DELETE application-----------//
+        public async Task WithdrawApp(int id, int userId)
+        {
+            var application = await _db.Applications
+                .Include(a => a.SeekerProfile)
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (application == null) throw new Exception("Job not found");
+            if (application.SeekerProfile.UserId != userId) throw new Exception("Unauthorized!");
+
+            _db.Applications.Remove(application);
+            await _db.SaveChangesAsync();
+        }
+
+
+        //-----GET show employer list of all aplications on a job-----//
+        public async Task<EmployerAppsListResponseDto> GetAppsOfJob(int userId, int jobId, int page, int pageSize)
+        {
+            // verify job exists and belongs to this employer
+            var job = await _db.Jobs
+                .Include(j => j.EmployerProfile)
+                .FirstOrDefaultAsync(j => j.Id == jobId);
+
+            if (job == null) throw new Exception("Job not found");
+            if (job.EmployerProfile.UserId != userId) throw new Exception("Unauthorized");
+
+            // query applications for this job
+            var query = _db.Applications
+                .Include(a => a.SeekerProfile)
+                    .ThenInclude(sp => sp.User)
+                .Where(a => a.JobId == jobId)
+                .OrderByDescending(a => a.CreatedAt)
+                .AsQueryable();
+
+            //count total amout
+            var totalCount = await query.CountAsync();
+
+            //apply pagination
+            var applications = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            // map to response DTOs
+            var appsDtos = applications.Select(a => new EmployerAppResponseDto
+            {
+                Id = a.Id,
+                SeekerName = a.SeekerProfile.User.FullName,
+                SeekerEmail = a.SeekerProfile.User.Email,
+                CoverLetter = a.CoverLetter,
+                Status = a.Status,
+                AppliedAt = a.CreatedAt
+            }).ToList();
+
+
+            return new EmployerAppsListResponseDto
+            {
+                Applications = appsDtos,
+                TotalCount = totalCount,
+                Page = page,
+                PageSize = pageSize,
+                TotalPages = (int)Math.Ceiling((double)totalCount / pageSize)
+            };
+        }
+
+
+
     }
 }

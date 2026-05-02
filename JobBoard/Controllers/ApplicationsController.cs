@@ -3,8 +3,9 @@ using JobBoard.DTOs.ApplicationDTOs;
 using JobBoard.DTOs.JobsDTOs;
 using JobBoard.Models;
 using JobBoard.Services;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 
 
@@ -53,6 +54,48 @@ namespace JobBoard.Controllers
             {
                 var userId = int.Parse(User.FindFirst("userId")!.Value);
                 var result = await _applicationService.GetAllApps(userId, page, pageSize);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+
+        }
+
+
+        //-----------DELETE withdraw/remove a application-----//
+        [Authorize(Roles = "Seeker")]
+        [HttpDelete("applications/{id}")]
+        public async Task<IActionResult> DeleteApplications(int id)
+        {
+
+            try
+            {
+                var userId = int.Parse(User.FindFirst("userId")!.Value);
+                await _applicationService.WithdrawApp(id, userId);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+
+        }
+
+
+        [Authorize(Roles = "Employer")]
+        [HttpGet("employer/jobs/{jobId}/applications")]
+        public async Task<IActionResult> GetJobApps(
+            int jobId,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10)
+        {
+            try
+            {
+                var userId = int.Parse(User.FindFirst("userId")!.Value);
+                var result = await _applicationService.GetAppsOfJob(userId,jobId, page, pageSize);
 
                 return Ok(result);
             }
