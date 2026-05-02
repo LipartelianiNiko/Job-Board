@@ -1,7 +1,6 @@
 ﻿using JobBoard.Data;
 using JobBoard.DTOs;
 using JobBoard.DTOs.JobsDTOs;
-using JobBoard.DTOs.JobsDTOs.JobBoard.DTOs.JobsDTOs;
 using JobBoard.Models;
 using Microsoft.EntityFrameworkCore;
 

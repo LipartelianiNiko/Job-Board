@@ -24,7 +24,6 @@
     <Folder Include="Middleware\" />
     <Folder Include="Data\" />
     <Folder Include="Helpers\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>

@@ -11,7 +11,6 @@
         public ApplicationStatus Status { get; set; } = ApplicationStatus.Pending;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
-
         public Job Job { get; set; } = null!;
         public SeekerProfile SeekerProfile { get; set; } = null!;
     }

@@ -34,6 +34,8 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped<JwtHelper>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<JobsService>();
+builder.Services.AddScoped<ApplicationService>();
+
 
 var app = builder.Build();//config is done
 

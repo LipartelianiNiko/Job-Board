@@ -1,5 +1,6 @@
-﻿namespace JobBoard.DTOs.JobsDTOs
-{
+﻿using JobBoard.Models;
+
+
     namespace JobBoard.DTOs.JobsDTOs
     {
         public class JobsListResponseDto
@@ -11,4 +12,4 @@
             public int TotalPages { get; set; }
         }
     }
-}
+
