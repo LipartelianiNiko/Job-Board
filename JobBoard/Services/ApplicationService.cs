@@ -182,5 +182,35 @@ namespace JobBoard.Services
 
 
 
+        //------PATCH change applications status----//
+        public async Task<EmployerAppResponseDto> UpdateAppStatus(int userId, int applicationId, UpdateAppStatusDto dto)
+        {
+            var application = await _db.Applications
+            .Include(a => a.Job)
+                .ThenInclude(j => j.EmployerProfile)
+            .FirstOrDefaultAsync(a => a.Id == applicationId);
+
+            if (application == null) throw new Exception("Application not found");
+            if (application.Job.EmployerProfile.UserId != userId) throw new Exception("Unauthorized");
+
+            application.Status = dto.Status;
+            application.UpdatedAt = DateTime.UtcNow;
+
+            await _db.SaveChangesAsync();
+
+            return new EmployerAppResponseDto
+            {
+                Id = application.Id,
+                SeekerName = application.SeekerProfile.User.FullName,
+                SeekerEmail = application.SeekerProfile.User.Email,
+                CoverLetter = application.CoverLetter,
+                Status = application.Status,
+                AppliedAt = application.CreatedAt
+            };
+        }
+
+
+
+
     }
 }

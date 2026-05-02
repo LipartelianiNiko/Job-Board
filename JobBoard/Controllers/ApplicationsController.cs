@@ -5,6 +5,7 @@ using JobBoard.Models;
 using JobBoard.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Data;
 
 
@@ -95,7 +96,7 @@ namespace JobBoard.Controllers
             try
             {
                 var userId = int.Parse(User.FindFirst("userId")!.Value);
-                var result = await _applicationService.GetAppsOfJob(userId,jobId, page, pageSize);
+                var result = await _applicationService.GetAppsOfJob(userId, jobId, page, pageSize);
 
                 return Ok(result);
             }
@@ -106,6 +107,25 @@ namespace JobBoard.Controllers
 
         }
 
+        [Authorize(Roles = "Employer")]
+        [HttpPatch("applications/{appId}/status")]
+        public async Task<IActionResult> UpdateAppStatus(int appId, UpdateAppStatusDto dto)
+        {
+            try
+            {
+                var userId = int.Parse(User.FindFirst("userId")!.Value);
+                var result = await _applicationService.UpdateAppStatus(userId, appId, dto );
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+
+
+
+        }
 
     }
 
