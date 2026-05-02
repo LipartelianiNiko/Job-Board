@@ -4,6 +4,8 @@ using JobBoard.DTOs.ApplicationDTOs;
 using JobBoard.DTOs.JobsDTOs;
 using JobBoard.Models;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using static System.Net.Mime.MediaTypeNames;
 
 
 namespace JobBoard.Services
@@ -19,6 +21,7 @@ namespace JobBoard.Services
             _db = db;
         }
 
+        //POST create Application, apply to a job. 
         public async Task<ApplicationResponseDto> CreateApplication(int Userid, int Jobid, CreateApplicationDto dto)
         {
             //ckeck token to make sure its seeker and that it exists.
@@ -41,7 +44,7 @@ namespace JobBoard.Services
             if (job.Status != JobStatus.Open) throw new Exception("Job is not open");
 
             //create application object, user userid of seeker to get seeker profile and assign it to application
-            var application = new Application
+            var application = new Models.Application
             {
                 JobId = Jobid,
                 SeekerProfileId = seekerProfile.Id,
@@ -65,8 +68,51 @@ namespace JobBoard.Services
                 Status = application.Status,
                 CreatedAt = application.CreatedAt
             };
+        }
 
+        //-----------------GET all of the single seeker's Applications--------//
+        public async Task<AppListResponseDto> GetAllApps(int userId, int page, int pageSize)
+        {
+            // query for user's applications
+            var query = _db.Applications
+                .Include(a => a.Job)
+                    .ThenInclude(j => j.EmployerProfile)
+                .Where(a => a.SeekerProfile.UserId == userId)
+                .OrderByDescending(a => a.CreatedAt)
+                .AsQueryable();
 
+            //count total amout
+            var totalCount = await query.CountAsync();
+
+            //apply pagination
+            var applications = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+          
+
+            // map to response DTOs
+            var appsDtos = applications.Select(j => new ApplicationResponseDto
+            {
+                Id = j.Id,
+                JobId = j.JobId,
+                JobTitle = j.Job.Title,
+                CompanyName = j.Job.EmployerProfile.CompanyName,
+                CoverLetter = j.CoverLetter,
+                Status = j.Status,
+                CreatedAt = j.CreatedAt
+            }).ToList();
+           
+
+            return new AppListResponseDto
+            {
+                Applications = appsDtos,
+                TotalCount = totalCount,
+                Page = page,
+                PageSize = pageSize,
+                TotalPages = (int)Math.Ceiling((double)totalCount / pageSize)
+            };
         }
 
     }

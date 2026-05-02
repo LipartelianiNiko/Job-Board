@@ -67,6 +67,7 @@ namespace JobBoard.Services
             string? city, int? category, int? employmentType,
             string? search, int page, int pageSize)
         {
+
             // start with all open jobs
             var query = _db.Jobs
                 .Include(j => j.EmployerProfile)
@@ -241,7 +242,7 @@ namespace JobBoard.Services
         
         //----------show employers all of their own listings------//
         public async Task<JobsListResponseDto> GetEmployerJobs(
-            int userId,
+           int userId,
            string? city, int? category, int? employmentType,
            string? search, int page, int pageSize)
         {

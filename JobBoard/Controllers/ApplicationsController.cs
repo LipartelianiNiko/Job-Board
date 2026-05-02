@@ -40,7 +40,26 @@ namespace JobBoard.Controllers
                 return StatusCode(500, new { message = ex.Message });
             }
 
+        }
 
+        //------GET seeker get all of their applications sent----//
+        [Authorize(Roles = "Seeker")]
+        [HttpGet("seeker/applications")]
+        public async Task<IActionResult> GetSeekerApps(
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10)
+        {
+            try
+            {
+                var userId = int.Parse(User.FindFirst("userId")!.Value);
+                var result = await _applicationService.GetAllApps(userId, page, pageSize);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
 
         }
 

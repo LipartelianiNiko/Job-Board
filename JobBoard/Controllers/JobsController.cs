@@ -142,7 +142,7 @@ namespace JobBoard.Controllers
 
         }
 
-        //GetEmployerJobs — employer sees all their listings
+        //-------GET GetEmployerJobs — employer sees all their listings----//
         [Authorize(Roles = "Employer")]
         [HttpGet("employer/jobs")]
         public async Task<IActionResult> GetEmployerJobs(
