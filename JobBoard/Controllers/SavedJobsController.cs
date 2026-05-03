@@ -24,8 +24,7 @@ namespace JobBoard.Controllers
         [HttpPost("jobs/{jobId}/save")]
         public async Task<IActionResult> CreateJob( int jobId)
         {
-            try
-            {
+
                 //Extract userId from token
                 var userId = int.Parse(User.FindFirst("userId")!.Value);
 
@@ -34,11 +33,7 @@ namespace JobBoard.Controllers
 
                 //Return 201 Created
                 return Created("", result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = ex.Message });
-            }
+
 
         }
 
@@ -53,17 +48,12 @@ namespace JobBoard.Controllers
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10)
         {
-            try
-            {
+   
                 var userId = int.Parse(User.FindFirst("userId")!.Value);
                 var result = await _savedJobsService.GetAllSavedJobs(userId, city, category, employmentType, search, page, pageSize);
 
                 return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = ex.Message });
-            }
+
 
         }
 
@@ -73,18 +63,13 @@ namespace JobBoard.Controllers
         public async Task<IActionResult> UnsaveJob(int jobId)
         {
 
-            try
-            {
                 var userId = int.Parse(User.FindFirst("userId")!.Value);
                 await _savedJobsService.UnsaveJob(jobId, userId);
                 return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = ex.Message });
-            }
 
         }
+        
+
 
 
     }

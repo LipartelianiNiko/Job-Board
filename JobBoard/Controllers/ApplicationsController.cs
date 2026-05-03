@@ -26,8 +26,7 @@ namespace JobBoard.Controllers
         [HttpPost("jobs/{jobId}/apply")]
         public async Task<IActionResult> CreateApplication(CreateApplicationDto dto, int jobId)
         {
-            try
-            {
+            
                 //Extract userId from token
                 var userId = int.Parse(User.FindFirst("userId")!.Value);
 
@@ -36,11 +35,7 @@ namespace JobBoard.Controllers
 
                 //Return 201 Created
                 return Created("", result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = ex.Message });
-            }
+            
 
         }
 
@@ -51,17 +46,12 @@ namespace JobBoard.Controllers
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 10)
         {
-            try
-            {
+           
                 var userId = int.Parse(User.FindFirst("userId")!.Value);
                 var result = await _applicationService.GetAllApps(userId, page, pageSize);
 
                 return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = ex.Message });
-            }
+            
 
         }
 
@@ -72,16 +62,11 @@ namespace JobBoard.Controllers
         public async Task<IActionResult> DeleteApplications(int id)
         {
 
-            try
-            {
+           
                 var userId = int.Parse(User.FindFirst("userId")!.Value);
                 await _applicationService.WithdrawApp(id, userId);
                 return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = ex.Message });
-            }
+            
 
         }
 
@@ -93,36 +78,23 @@ namespace JobBoard.Controllers
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 10)
         {
-            try
-            {
+           
                 var userId = int.Parse(User.FindFirst("userId")!.Value);
                 var result = await _applicationService.GetAppsOfJob(userId, jobId, page, pageSize);
 
                 return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = ex.Message });
-            }
-
+            
         }
 
         [Authorize(Roles = "Employer")]
         [HttpPatch("applications/{appId}/status")]
         public async Task<IActionResult> UpdateAppStatus(int appId, UpdateAppStatusDto dto)
         {
-            try
-            {
+           
                 var userId = int.Parse(User.FindFirst("userId")!.Value);
                 var result = await _applicationService.UpdateAppStatus(userId, appId, dto );
 
                 return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = ex.Message });
-            }
-
 
 
         }

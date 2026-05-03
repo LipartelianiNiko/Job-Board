@@ -186,9 +186,11 @@ namespace JobBoard.Services
         public async Task<EmployerAppResponseDto> UpdateAppStatus(int userId, int applicationId, UpdateAppStatusDto dto)
         {
             var application = await _db.Applications
-            .Include(a => a.Job)
-                .ThenInclude(j => j.EmployerProfile)
-            .FirstOrDefaultAsync(a => a.Id == applicationId);
+                .Include(a => a.Job)
+                    .ThenInclude(j => j.EmployerProfile)
+                .Include(a => a.SeekerProfile)
+                    .ThenInclude(sp => sp.User)
+                .FirstOrDefaultAsync(a => a.Id == applicationId);
 
             if (application == null) throw new Exception("Application not found");
             if (application.Job.EmployerProfile.UserId != userId) throw new Exception("Unauthorized");

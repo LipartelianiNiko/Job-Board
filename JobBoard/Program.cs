@@ -1,5 +1,6 @@
 using JobBoard.Data;
 using JobBoard.Helpers;
+using JobBoard.Middleware;
 using JobBoard.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -41,6 +42,7 @@ builder.Services.AddScoped<SavedJobsService>();
 
 var app = builder.Build();//config is done
 
+app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseAuthentication();//adds jwt middleware, ceck token on each request
 app.UseAuthorization();
 app.MapControllers();
