@@ -168,7 +168,6 @@ namespace JobBoard.Controllers
         }
 
 
-        //GetEmployerJobById - employer sees single listing with applications
 
     }
 }

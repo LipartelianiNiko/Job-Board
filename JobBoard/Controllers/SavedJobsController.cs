@@ -42,7 +42,32 @@ namespace JobBoard.Controllers
 
         }
 
-        
+        //----------GET all saved jobs of a seeker-----------------//
+        [Authorize(Roles = "Seeker")]
+        [HttpGet("seeker/savedJobs")]
+        public async Task<IActionResult> GetEmployerJobs(
+        [FromQuery] string? city,
+        [FromQuery] int? category,
+        [FromQuery] int? employmentType,
+        [FromQuery] string? search,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10)
+        {
+            try
+            {
+                var userId = int.Parse(User.FindFirst("userId")!.Value);
+                var result = await _savedJobsService.GetAllSavedJobs(userId, city, category, employmentType, search, page, pageSize);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+
+        }
+
+
 
     }
 }

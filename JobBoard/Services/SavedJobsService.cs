@@ -68,5 +68,73 @@ namespace JobBoard.Services
 
         }
 
+
+        //-------------GET all saved jobs of a seeker-----------//
+        public async Task<JobsListResponseDto> GetAllSavedJobs(
+            int userId,
+           string? city, int? category, int? employmentType,
+           string? search, int page, int pageSize
+            )
+        {
+            var seekerProfile = await _db.SeekersProfiles
+                .FirstOrDefaultAsync(sp => sp.UserId == userId);
+            if (seekerProfile == null) throw new Exception("Seeker profile not found");
+
+            //query for jobs
+            var query = _db.SavedJobs
+                .Include(sj => sj.Job)
+                    .ThenInclude(j => j.EmployerProfile)
+                .Where(sj => sj.SeekerProfile.UserId == userId)
+                .OrderByDescending(sj => sj.SavedAt)
+                .AsQueryable();
+
+            // apply filters if provided
+            if (!string.IsNullOrEmpty(city))
+                query = query.Where(sj => sj.Job.City == city);
+
+            if (category.HasValue)
+                query = query.Where(sj => (int)sj.Job.Category == category.Value);
+
+            if (employmentType.HasValue)
+                query = query.Where(sj => (int)sj.Job.EmploymentType == employmentType.Value);
+
+            if (!string.IsNullOrEmpty(search))
+                query = query.Where(sj => sj.Job.Title.Contains(search) ||
+                                           sj.Job.Description.Contains(search));
+
+            var totalCount = await query.CountAsync();
+
+            // apply pagination
+            var savedJobs = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            // map to response DTOs
+            var savedDtos = savedJobs.Select(sj => new JobResponseDto
+            {
+                Id = sj.Job.Id,
+                Title = sj.Job.Title,
+                Description = sj.Job.Description,
+                SalaryMin = sj.Job.SalaryMin,
+                SalaryMax = sj.Job.SalaryMax,
+                City = sj.Job.City,
+                Category = sj.Job.Category,
+                EmploymentType = sj.Job.EmploymentType,
+                Status = sj.Job.Status,
+                CreatedAt = sj.Job.CreatedAt,
+                CompanyName = sj.Job.EmployerProfile.CompanyName
+            }).ToList();
+
+            return new JobsListResponseDto
+            {
+                Jobs = savedDtos,
+                TotalCount = totalCount,
+                Page = page,
+                PageSize = pageSize,
+                TotalPages = (int)Math.Ceiling((double)totalCount / pageSize)
+            };
         }
+
+    }
     }
