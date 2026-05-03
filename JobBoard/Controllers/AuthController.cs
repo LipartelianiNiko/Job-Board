@@ -1,6 +1,7 @@
 ﻿using JobBoard.DTOs;
 using JobBoard.DTOs.AuthDTOs;
 using JobBoard.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JobBoard.Controllers
@@ -62,5 +63,25 @@ namespace JobBoard.Controllers
             }
 
         }
+
+
+        //---------------GET get user profile---------------//
+        [Authorize]
+        [HttpGet("me")]
+        public async Task<IActionResult> RetrunUser()
+        {
+            try
+            {
+                var userId = int.Parse(User.FindFirst("userId")!.Value);
+                var result = await _authService.ReturnProfile(userId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+
+        }
+
     }
 }

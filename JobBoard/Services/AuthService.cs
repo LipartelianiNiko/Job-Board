@@ -124,6 +124,26 @@ namespace JobBoard.Services
             };
         }
 
+        //---------------GET return profile to users------------------//
+        public async Task<UserResponseDto> ReturnProfile(int userId)
+        {
+            var user = await _db.Users
+                .Include(u => u.EmployerProfile)
+                .FirstOrDefaultAsync(u => u.Id == userId);
 
+            if (user == null) throw new Exception("user profile not found");
+
+            return new UserResponseDto
+            {
+                Id = user.Id,
+                FullName = user.FullName,
+                Email = user.Email,
+                Role = user.Role,
+                CompanyName = user.Role == Role.Employer//if user has emplyer profile, thne return comany name too. 
+            ? user.EmployerProfile?.CompanyName
+            : null
+            };
+
+        }
     }
 }
