@@ -122,7 +122,7 @@ namespace JobBoard.Services
                 .Include(a => a.SeekerProfile)
                 .FirstOrDefaultAsync(u => u.Id == id);
 
-            if (application == null) throw new Exception("Job not found");
+            if (application == null) throw new Exception("Application not found");
             if (application.SeekerProfile.UserId != userId) throw new Exception("Unauthorized!");
 
             _db.Applications.Remove(application);

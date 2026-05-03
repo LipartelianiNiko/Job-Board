@@ -136,5 +136,21 @@ namespace JobBoard.Services
             };
         }
 
+
+        //----------DELETE unsave a job-----------//
+        public async Task UnsaveJob(int jobId, int userId)
+        {
+            var seekerProfile = await _db.SeekersProfiles
+                .FirstOrDefaultAsync(sp => sp.UserId == userId);
+            if (seekerProfile == null) throw new Exception("Seeker profile not found");
+
+            var savedJob = await _db.SavedJobs
+                .FirstOrDefaultAsync(sj => sj.JobId == jobId && sj.SeekerProfileId == seekerProfile.Id);
+
+            if (savedJob == null) throw new Exception("Saved job not found");
+
+            _db.SavedJobs.Remove(savedJob);
+            await _db.SaveChangesAsync();
+        }
     }
     }

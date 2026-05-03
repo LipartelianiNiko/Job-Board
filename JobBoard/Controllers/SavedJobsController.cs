@@ -67,6 +67,24 @@ namespace JobBoard.Controllers
 
         }
 
+        //----------DELETE unsave a job-----------//
+        [Authorize(Roles = "Seeker")]
+        [HttpDelete("seeker/savedJobs/{jobId}")]
+        public async Task<IActionResult> UnsaveJob(int jobId)
+        {
+
+            try
+            {
+                var userId = int.Parse(User.FindFirst("userId")!.Value);
+                await _savedJobsService.UnsaveJob(jobId, userId);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+
+        }
 
 
     }
