@@ -35,6 +35,8 @@ builder.Services.AddScoped<JwtHelper>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<JobsService>();
 builder.Services.AddScoped<ApplicationService>();
+builder.Services.AddScoped<SavedJobsService>();
+
 
 
 var app = builder.Build();//config is done
@@ -42,5 +44,6 @@ var app = builder.Build();//config is done
 app.UseAuthentication();//adds jwt middleware, ceck token on each request
 app.UseAuthorization();
 app.MapControllers();
+
 
 app.Run();//start the server
