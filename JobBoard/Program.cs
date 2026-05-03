@@ -38,9 +38,18 @@ builder.Services.AddScoped<JobsService>();
 builder.Services.AddScoped<ApplicationService>();
 builder.Services.AddScoped<SavedJobsService>();
 
-
+//add cors
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReact", policy =>
+        policy.WithOrigins("http://localhost:3000")
+              .AllowAnyHeader()
+              .AllowAnyMethod());
+});
 
 var app = builder.Build();//config is done
+
+app.UseCors("AllowReact");
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseAuthentication();//adds jwt middleware, ceck token on each request

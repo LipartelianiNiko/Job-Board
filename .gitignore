@@ -3,3 +3,4 @@
 .env
 *.user
 .vs/
+appsettings.json
