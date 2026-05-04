@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace JobBoard.Controllers
 {
     [ApiController]
-    [Route("auth")]
+    [Route("api/auth")]
     public class AuthController : ControllerBase
     {
         //inject AuthService

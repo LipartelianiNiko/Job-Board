@@ -99,7 +99,7 @@ namespace JobBoard.Controllers
 
         //--------------DELETE a job------------//
         [Authorize(Roles = "Employer")]
-        [HttpDelete("jobs/{id}/delete")]
+        [HttpDelete("jobs/{id}")]
         public async Task<IActionResult> DeleteJob(int id)
         {
 
