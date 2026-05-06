@@ -1,8 +1,22 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import HomePage from './pages/HomePage';
+//import JobDetailPage from './pages/JobDetailPage';
+import Dashboard from './pages/Dashboard';
+import Navbar from './components/Navbar';
+import Hero from './components/Hero';
+
+import './App.css'
+
 function App() {
   return (
-    <div>
-      <h1>Job Board</h1>
-    </div>
+    <BrowserRouter>
+      <Navbar />
+      <Hero/>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
