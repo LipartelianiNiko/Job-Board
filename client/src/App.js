@@ -17,7 +17,6 @@ function App() {
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const [showCreateJob, setShowCreateJob] = useState(false);
-  const [showApply, setShowApply] = useState(false);
 
 
   return (
@@ -26,14 +25,12 @@ function App() {
         onLoginClick={() => setShowLogin(true)} 
         onRegisterClick={() => setShowRegister(true)} 
         onCreateJobClick={() => setShowCreateJob(true)}
-        onApplyclicked={()=> setShowApply(true)}
       />
       <Routes>
         <Route path="/" element={
           <HomePage 
             onLoginClick={() => setShowLogin(true)} 
             onCreateJobClick={() => setShowCreateJob(true)}
-            onApplyclicked={()=>setShowApply(true)}
           />} 
         />
         <Route path="/dashboard" element={<Dashboard />} />
@@ -46,14 +43,12 @@ function App() {
           onSwitchToRegister={() => { 
             setShowLogin(false); 
             setShowRegister(true); 
-            setShowApply(true);
           }} 
         />
       )}
     
       {showRegister && <RegisterModal onClose={() => setShowRegister(false)} />}
       {showCreateJob && <CreateJobModal onClose={() => setShowCreateJob(false)} />}
-      {showApply && <applyModal onClose={() => setShowApply(false)} />}
 
     </BrowserRouter>
   );

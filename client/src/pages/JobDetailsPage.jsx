@@ -1,11 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getJobsById } from '../api';
+import { useAuth } from '../context/AuthContext';
+import ApplyModal from '../components/ApplyModal';
 
 export default function JobDetails( ) {
+    const { user } = useAuth();
     const [job, setJob] = useState(null);
     const { id } = useParams();
     console.log('id:', id);
+
+    const [showApply, setShowApply] = useState(false);
 
     const navigate = useNavigate();
 
@@ -51,13 +56,18 @@ export default function JobDetails( ) {
         </div>
         <div className="meta-row"><span className="meta-label">Status</span><span className="badge badge-open">{job.status}</span></div>
       </div>
-      <div className="sidebar-actions">
-        <button className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }} >Apply Now</button>
-        <button className="btn btn-ghost" id="detailSaveBtn" style={{ width: '100%', justifyContent: 'center' }} >♡ Save Job</button>
-      </div>
+
+        {user && user.role === 'Seeker' && (
+          <div className="sidebar-actions">
+          <button className="btn btn-primary" onClick={() => setShowApply(true)}>Apply Now</button>
+          <button className="btn btn-ghost" id="detailSaveBtn" style={{ width: '100%', justifyContent: 'center' }} >♡ Save Job</button>
+          </div>
+        )}
+
     </div>
   </div>
 </div>
+{showApply && <ApplyModal jobId={id} onClose={() => setShowApply(false)} />}
 
     </>
   );

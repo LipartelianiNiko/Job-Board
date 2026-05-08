@@ -13,6 +13,10 @@ export default function CreateJobModal({onClose}){
     const [salaryMax, setSalaryMax] = useState('');
     const [city, setCity] = useState('');
 
+    const [success, setSuccess] = useState(false);
+    const [draftSuccess, setDraftSuccess] = useState(false);
+
+    
     async function publish(){
         //export const createJob=(data)=>API.post('/jobs', data);
         //+update status
@@ -28,8 +32,10 @@ export default function CreateJobModal({onClose}){
             };
         const res=await createJob(jobData);
         await updateJobStatus(res.data.id, {status: "Open"})
-        onClose();
-
+        setSuccess(true);
+        setTimeout(() => {
+            onClose();
+        }, 1500);
     }
 
 
@@ -45,9 +51,30 @@ export default function CreateJobModal({onClose}){
             city
         };
         await createJob(jobData);
-        onClose()
+        setDraftSuccess(true);
+        setTimeout(() => {
+            onClose();
+        }, 1500);    
     }
 
+     if (success) return (
+    <div className="modal-overlay">
+        <div className="modal" style={{ textAlign: 'center' }}>
+        <div style={{ fontSize: '32px', marginBottom: '12px' }}>✓</div>
+        <div className="modal-title">Job Created</div>
+        <div className="modal-sub">Good luck!</div>
+        </div>
+    </div>
+    );
+   if (draftSuccess) return (
+    <div className="modal-overlay">
+        <div className="modal" style={{ textAlign: 'center' }}>
+        <div style={{ fontSize: '32px', marginBottom: '12px' }}>✓</div>
+        <div className="modal-title">Job Draft Created</div>
+        <div className="modal-sub">Good luck!</div>
+        </div>
+    </div>
+    );
 
 return(
     <>
