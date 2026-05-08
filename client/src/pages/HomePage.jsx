@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { getJobs } from '../api';
 import JobCard from '../components/JobCard';
 
+
 const categoryMap = {
   'Technology': 0, 'Finance': 1, 'Marketing': 2, 'Design': 3,
   'Sales': 4, 'HR': 5, 'Operations': 6, 'Legal': 7, 'Management': 8, 'Other': 9
@@ -23,23 +24,31 @@ export default function HomePage() {
   const [category, setCategory] = useState('');
   const [city, setCity] = useState('');
   const [employmentType, setEmploymentType] = useState('');
+  const [totalPages, setTotalPages]=useState(1)
 
 
   //useeffect for filtering and for load
   useEffect(() => {
-  getJobs({ 
+  getJobs({ //params
       search, 
       category: category ? categoryMap[category] : undefined,
       employmentType: employmentType ? employmentTypeMap[employmentType] : undefined,
       city, 
-      page 
+      page
   }).then(res => {
     console.log('category param:', category ? categoryMap[category] : undefined);
     console.log('employmentType param:', employmentType ? employmentTypeMap[employmentType] : undefined);
     setJobs(res.data.jobs);
     setTotalCount(res.data.totalCount);
+    setPage(res.data.page);
+    setTotalPages(res.data.totalPages);
+    console.log("count: "+totalCount);
+    console.log("total pages: "+totalPages);
+
   })
-}, [search, category, city, employmentType, page]);
+}, [search, category, city, employmentType, page, totalCount, totalPages]);
+
+
 
 
   return(
@@ -72,6 +81,19 @@ export default function HomePage() {
         </div>
       ))}
     </div>
+      </div>
+      {/*pagination, based on page count retuned form backedn(page=totalcount/10) create buttons,
+       eacch button on click updates page, sets it to num(assigned page numebr to button) and triggers useeffect
+       then useeffect passes in parameters in getJobs(), page is one of them, and page is set to num*/}
+        <div className="pagination">
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map(num=>(
+            <button
+                key={num}
+                className={`page-btn ${page === num ? 'active' : ''}`}
+                onClick={() => setPage(num)}>
+                {num}
+            </button>
+          ))}
       </div>
     </div>
     </>
