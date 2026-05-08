@@ -5,7 +5,7 @@ export default function JobCard({job}){
 
     return(
         <div className="job-card" onClick={()=>{navigate(`/jobs/${job.id}`)}}>
-            <div class="company-logo">{job.companyName.substring(0, 2).toUpperCase()}</div>
+            <div className="company-logo">{job.companyName.substring(0, 2).toUpperCase()}</div>
             <div className="job-body">
                 <div className="job-title">{job.title}</div>
                     <div className="job-meta">
