@@ -1,7 +1,44 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { saveJob } from "../api";
+import { unsaveJob } from "../api";
+import { useEffect } from "react";
+import { getSavedJobs } from "../api";
 
 export default function JobCard({job}){
     const navigate=useNavigate();
+    const [savedJobs, setSavedJobs] = useState([]);
+
+    
+    useEffect(() => {
+        getSavedJobs()
+            .then(res => {
+            setSavedJobs(res.data.jobs.map(job => job.id));
+            });
+    }, []);
+
+    async function toggleSave(jobId) {
+        const isSaved = savedJobs.includes(jobId);
+
+        try {
+
+            if (isSaved) {
+            await unsaveJob(jobId);
+
+            setSavedJobs(prev =>
+                prev.filter(id => id !== jobId)
+            );
+
+            } else {
+            await saveJob(jobId);
+
+            setSavedJobs(prev => [...prev, jobId]);
+            }
+
+        } catch(err) {
+            console.log(err);
+        }
+    }
 
     return(
         <div className="job-card" onClick={()=>{navigate(`/jobs/${job.id}`)}}>
@@ -21,7 +58,17 @@ export default function JobCard({job}){
             <span className="job-salary">{job.salaryMin}$</span>
             <span className="job-salary">{job.salaryMax}$</span>
 
-            <button className="job-save-btn {savedJobs.has(j.id)?'saved':''}" onClick={() => {}}>♡</button>
+            <button
+            className={`job-save-btn ${savedJobs.includes(job.id) ? 'saved' : ''}`}
+            onClick={(e) => {
+                e.stopPropagation();
+                toggleSave(job.id);
+            }}
+            >
+            {savedJobs.includes(job.id)
+                ? '♥'
+                : '♡'}
+            </button>
         </div>
     );
 }

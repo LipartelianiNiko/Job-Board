@@ -76,8 +76,8 @@ export default function HomePage({ onLoginClick, onCreateJobClick }) {
         <div>
       <p>{totalCount} jobs</p>
       {jobs.map(job => (
-        <div style={{ paddingTop: '8px' }}>
-          <JobCard key={job.id} job={job} />
+        <div key={job.id} style={{ paddingTop: '8px' }}>
+          <JobCard  job={job} />
         </div>
       ))}
     </div>

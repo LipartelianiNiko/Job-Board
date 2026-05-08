@@ -31,6 +31,7 @@
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
+
   }
 
   nav {
@@ -97,8 +98,8 @@
   .btn-primary { background: var(--accent); color: white; font-weight: 600; box-shadow: 0 1px 3px rgba(27,79,216,0.3); }
   .btn-primary:hover { background: #1544C0; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(27,79,216,0.35); }
 
-  .page { display: none; padding-top: 60px; min-height: 100vh; }
-  .page.active { display: block; }
+  /*.page { display: none; padding-top: 60px; min-height: 100vh; }
+  .page.active { display: block; }*/
 
   /* HERO */
   .hero {
