@@ -1,15 +1,11 @@
 import { useAuth} from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import LoginModal from "./LoginModal";
-import RegisterModal from "./RegisterModal";
 
-export default function Navbar() {
+
+export default function Navbar({ onLoginClick, onRegisterClick , onCreateJobClick}) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
-const [showLogin, setShowLogin] = useState(false);
-const [showRegister, setShowRegister] = useState(false);
 
 
   function handleLogout() {
@@ -37,25 +33,15 @@ const [showRegister, setShowRegister] = useState(false);
           </>
         ) : (
           <>
-            <button className="btn btn-ghost" onClick={() => { console.log('login clicked'); setShowLogin(true); }}>Sign In</button>
-            <button className="btn btn-primary" onClick={()=>setShowRegister(true)}>Register</button>
+            <button className="btn btn-ghost" onClick={onLoginClick}>Sign In</button>
+            <button className="btn btn-primary" onClick={onRegisterClick}>Register</button>
 
           </>
         )}
       </div>
     </nav>
-    
-    {showLogin && (
-      <LoginModal 
-        onClose={() => setShowLogin(false)} 
-        onSwitchToRegister={() => { 
-          setShowLogin(false); 
-          setShowRegister(true); 
-        }} 
-      />
-    )}     
 
-    {showRegister && <RegisterModal onClose={() => setShowRegister(false)} />}
+ 
 
     </>
   );

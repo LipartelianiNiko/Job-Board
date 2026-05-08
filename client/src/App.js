@@ -4,19 +4,57 @@ import HomePage from './pages/HomePage';
 import Dashboard from './pages/Dashboard';
 import Navbar from './components/Navbar';
 import JobDetails from './pages/JobDetailsPage';
-
+import { useState } from 'react';
+import LoginModal from './components/LoginModal';
+import RegisterModal from './components/RegisterModal';
+import CreateJobModal from './components/CreateJobModal';
 
 import './App.css'
 
 function App() {
+
+  //modals
+  const [showLogin, setShowLogin] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
+  const [showCreateJob, setShowCreateJob] = useState(false);
+  const [showApply, setShowApply] = useState(false);
+
+
   return (
     <BrowserRouter>
-      <Navbar />
+      <Navbar 
+        onLoginClick={() => setShowLogin(true)} 
+        onRegisterClick={() => setShowRegister(true)} 
+        onCreateJobClick={() => setShowCreateJob(true)}
+        onApplyclicked={()=> setShowApply(true)}
+      />
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={
+          <HomePage 
+            onLoginClick={() => setShowLogin(true)} 
+            onCreateJobClick={() => setShowCreateJob(true)}
+            onApplyclicked={()=>setShowApply(true)}
+          />} 
+        />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/jobs/:id" element={<JobDetails/>} />
       </Routes>
+
+      {showLogin && (
+        <LoginModal 
+          onClose={() => setShowLogin(false)} 
+          onSwitchToRegister={() => { 
+            setShowLogin(false); 
+            setShowRegister(true); 
+            setShowApply(true);
+          }} 
+        />
+      )}
+    
+      {showRegister && <RegisterModal onClose={() => setShowRegister(false)} />}
+      {showCreateJob && <CreateJobModal onClose={() => setShowCreateJob(false)} />}
+      {showApply && <applyModal onClose={() => setShowApply(false)} />}
+
     </BrowserRouter>
   );
 }

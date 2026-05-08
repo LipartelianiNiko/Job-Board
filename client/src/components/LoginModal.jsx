@@ -1,9 +1,8 @@
 import { useAuth } from "../context/AuthContext";
 import { useState } from "react";
-import setShowRegister from "./Navbar";
 
 export default function LoginModal({ onClose ,onSwitchToRegister }) {
-console.log('LoginModal rendered');
+  console.log('LoginModal rendered');
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

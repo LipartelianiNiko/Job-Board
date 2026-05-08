@@ -14,7 +14,7 @@ const employmentTypeMap = {
   'Full-time': 0, 'Part-time': 1, 'Contract': 2, 'Internship': 3
 };
 
-export default function HomePage() {
+export default function HomePage({ onLoginClick, onCreateJobClick }) {
   const [jobs, setJobs] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(1);
@@ -54,7 +54,7 @@ export default function HomePage() {
   return(
     <>
     <div style={{ paddingTop: '30px' }}>
-    <Hero/>
+    <Hero onLoginClick={onLoginClick} onCreateJobClick={onCreateJobClick}/>
     </div>
     <SearchSection
       search={search}
