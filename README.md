@@ -43,7 +43,7 @@ A full-stack job board platform connecting job seekers and employers.
 ![Jobs](ScreenShots/Jobs.png)
 ![Job Detail](ScreenShots/JobsDetail.png)
 ![Seeker Dashboard](ScreenShots/SeekerDash.png)
-![Employer Dashboard](ScreenShots/EmployerListings.png)
+![Employer Dashboard](ScreenShots/EmployerLisings.png)
 
 ---
 
