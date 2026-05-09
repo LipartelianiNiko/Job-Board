@@ -4,18 +4,24 @@ import { saveJob } from "../api";
 import { unsaveJob } from "../api";
 import { useEffect } from "react";
 import { getSavedJobs } from "../api";
+import {useAuth} from "../context/AuthContext"
 
 export default function JobCard({job}){
     const navigate=useNavigate();
     const [savedJobs, setSavedJobs] = useState([]);
 
-    
+    const { user } = useAuth();
+
+
     useEffect(() => {
-        getSavedJobs()
-            .then(res => {
-            setSavedJobs(res.data.jobs.map(job => job.id));
-            });
-    }, []);
+    if (!user || user.role !== 'Seeker') {
+        setSavedJobs([]);
+        return;
+    }
+    getSavedJobs().then(res => {
+        setSavedJobs(res.data.jobs.map(job => job.id));
+    });
+    }, [user]);
 
     async function toggleSave(jobId) {
         const isSaved = savedJobs.includes(jobId);
@@ -57,18 +63,19 @@ export default function JobCard({job}){
             </div>
             <span className="job-salary">{job.salaryMin}$</span>
             <span className="job-salary">{job.salaryMax}$</span>
-
-            <button
-            className={`job-save-btn ${savedJobs.includes(job.id) ? 'saved' : ''}`}
-            onClick={(e) => {
-                e.stopPropagation();
-                toggleSave(job.id);
-            }}
-            >
-            {savedJobs.includes(job.id)
-                ? '♥'
-                : '♡'}
-            </button>
+            {user && user.role === 'Seeker' && (
+                <button
+                className={`job-save-btn ${savedJobs.includes(job.id) ? 'saved' : ''}`}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    toggleSave(job.id);
+                }}
+                >
+                {savedJobs.includes(job.id)
+                    ? '♥'
+                    : '♡'}
+                </button>
+            )}
         </div>
     );
 }

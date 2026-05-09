@@ -1,8 +1,20 @@
 import { useEffect, useState } from "react";
 import { getMyApplications } from "../api";
 import { getSavedJobs } from "../api";
+import { unsaveJob } from "../api";
+import { withdrawApplication } from "../api";
+import { useNavigate } from "react-router-dom";
+import { useSearchParams } from 'react-router-dom';
+import ApplicationDetailsModal from "./ApplicationDetailsModal";
 
-export default function SeekerDashboard(){
+export default function SeekerDashboard(onClose){
+    const [selectedApp, setSelectedApp] = useState(null);
+
+    const navigate=useNavigate();
+
+    const [searchParams, setSearchParams] = useSearchParams();
+    const activeTab = searchParams.get('tab') || 'applications';
+
     const [applications, setApplications]=useState([]);
     const [savedJobs, setSavedJobs]=useState([]);
 
@@ -14,7 +26,7 @@ export default function SeekerDashboard(){
     const [appTotalPages, setAppTotalPages] = useState(1);
     const [savedTotalPages, setSavedTotalPages] = useState(1);
 
-    const [activeTab, setActiveTab] = useState('applications');
+
 
     useEffect(() => {
         getMyApplications({page:appPage})
@@ -36,6 +48,18 @@ export default function SeekerDashboard(){
         .catch(err => console.log(err));
     }, [savedPage]);
 
+    async function handleUnsave(jobId) {
+        if (!window.confirm('Unsave this job?')) return;
+        await unsaveJob(jobId);
+        setSavedJobs(prev => prev.filter(j => j.id !== jobId));
+    }
+
+    async function handleWithdraw(appId) {
+        if (!window.confirm('Withdraw this application?')) return;
+        await withdrawApplication(appId);
+        setApplications(prev => prev.filter(a => a.id !== appId));
+    }
+
     function getStatusClass(status) {
         switch (status) {
             case "Pending":
@@ -51,7 +75,21 @@ export default function SeekerDashboard(){
         }
     }
 
+    function getStatusClassSavedJobs(status) {
+        switch (status) {
+            case "Open":
+            return "badge-open";
+            case "Draft":
+            return "badge-draft";
+            case "Closed":
+            return "badge-closed";
+            default:
+            return "badge-draft";
+        }
+    }
+
     return(
+        <>
     <div style={{ paddingTop: "80px" }}>
     <div  id="seekerDash">
         <div className="dashboard-wrap">
@@ -61,8 +99,8 @@ export default function SeekerDashboard(){
             </div>
 
             <div className="dash-tabs">
-            <button className={`dash-tab ${activeTab === 'applications' ? 'active' : ''}`} onClick={() => setActiveTab('applications')}>Applications</button>
-            <button className={`dash-tab ${activeTab === 'saved' ? 'active' : ''}`} onClick={() => setActiveTab('saved')}>Saved Jobs</button>
+            <button className={`dash-tab ${activeTab === 'applications' ? 'active' : ''}`} onClick={() => setSearchParams({ tab: 'applications' })}>Applications</button>
+            <button className={`dash-tab ${activeTab === 'saved' ? 'active' : ''}`} onClick={() => setSearchParams({ tab: 'saved' })}>Saved Jobs</button>
             </div>
 
         {/* APPLICATIONS TAB */}
@@ -70,7 +108,7 @@ export default function SeekerDashboard(){
             <div id="appsTab">
                 <div className="data-list">
                 {applications.map(app => (
-                <div className="data-row" key={app.id} onClick={()=>{alert("hello")}}>
+                <div className="data-row" style={{ cursor: 'pointer' }} key={app.id} onClick={() => setSelectedApp(app)}>
                     
                     <div className="data-info">
                     <div className="data-title">{app.jobTitle}</div>
@@ -88,6 +126,8 @@ export default function SeekerDashboard(){
                     {app.status}
                     </span>
 
+                    <button className="icon-btn icon-btn-danger" onClick={(e) => { e.stopPropagation(); handleWithdraw(app.id)}}>✕</button>
+
                 </div>
             ))}
             </div>
@@ -99,7 +139,7 @@ export default function SeekerDashboard(){
         <div id="savedTab">
             <div className="data-list">
                 {savedJobs.map(job => (
-                    <div className="data-row" key={job.id}>
+                    <div className="data-row" style={{ cursor: 'pointer' }} key={job.id} onClick={()=>{navigate(`/jobs/${job.id}`)}} >
 
                         <div className="data-info">
                         <div className="data-title">{job.title}</div>
@@ -119,9 +159,11 @@ export default function SeekerDashboard(){
                             {new Date(job.createdAt).toLocaleDateString()}
                         </span>
 
-                        <span className={`badge ${getStatusClass(job.status)}`}>
+                        <span className={`badge ${getStatusClassSavedJobs(job.status)}`}>
                             {job.status}
                         </span>
+
+                        <button className="icon-btn icon-btn-danger" onClick={(e) => { e.stopPropagation(); handleUnsave(job.id)}}>✕</button>
 
                     </div>
                     ))}
@@ -161,7 +203,18 @@ export default function SeekerDashboard(){
         )}
     </div>
     </div>
-</div>
 
+</div>
+            {selectedApp && (
+            <ApplicationDetailsModal 
+                app={selectedApp} 
+                onClose={() => setSelectedApp(null)}
+                onWithdraw={(appId) => {
+                setApplications(prev => prev.filter(a => a.id !== appId));
+                setSelectedApp(null);
+                }}
+            />
+            )}
+</>
     )
 }

@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { getEmployerJobs } from "../api";
-
+import { useNavigate } from "react-router-dom";
 
 
 export default function EmployerDashboard(){
+    const navigate=useNavigate();
         const [jobs, setJobs]=useState([]);
         const [totalPages, setTotalPages] = useState(1);
         const [page, setPage] = useState(1);
@@ -35,7 +36,7 @@ export default function EmployerDashboard(){
             <div id="listingsTab">
                 <div className="data-list">
                     {jobs.map(job => (
-                        <div className="data-row" key={job.id} onClick={()=>{alert("hello emp")}}>
+                        <div className="data-row"  style={{ cursor: 'pointer' }} key={job.id} onClick={()=>{navigate(`/jobs/${job.id}`)}}>
 
                         <div className="data-info">
                         <div className="data-title">

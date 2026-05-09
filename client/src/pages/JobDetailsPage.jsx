@@ -27,7 +27,7 @@ export default function JobDetails( ) {
     <div className="detail-wrap">
     <div>
 
-     <button className="back-btn" onClick={() => navigate('/')}>← Back to Jobs</button>
+     <button className="back-btn" onClick={() => navigate(-1)}>← Go Back</button>
       <div className="detail-header">
         <div className="detail-logo" id="detailLogo">{job.companyName.substring(0, 2).toUpperCase()}</div>
         <div>
