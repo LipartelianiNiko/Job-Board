@@ -1,8 +1,7 @@
   import { useAuth } from "../context/AuthContext";
 
-  export default function Hero({onCreateJobClick, onLoginClick}){ 
+  export default function Hero({onCreateJobClick, onLoginClick, totalCount}){ 
     const { user } = useAuth();
-    console.log('user role:', user?.role);
     return(
 
         <>
@@ -25,10 +24,7 @@
                     </div>
                 </div>
                 <div className="hero-stats-panel">
-                    <div className="stat"><div className="stat-num">0</div><div className="stat-label">Open Roles</div></div>
-                    <div className="stat"><div className="stat-num">0</div><div className="stat-label">Companies</div></div>
-                    <div className="stat"><div className="stat-num">0</div><div className="stat-label">New Today</div></div>
-                    <div className="stat"><div className="stat-num">0</div><div className="stat-label">Response Rate</div></div>
+                    <div className="stat"><div className="stat-num">{totalCount}</div><div className="stat-label">Open Roles</div></div>
                 </div>
                 </div>
             </div>

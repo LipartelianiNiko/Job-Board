@@ -42,9 +42,6 @@ export default function HomePage({ onLoginClick, onCreateJobClick }) {
     setTotalCount(res.data.totalCount);
     setPage(res.data.page);
     setTotalPages(res.data.totalPages);
-    console.log("count: "+totalCount);
-    console.log("total pages: "+totalPages);
-
   })
 }, [search, category, city, employmentType, page, totalCount, totalPages]);
 
@@ -54,7 +51,7 @@ export default function HomePage({ onLoginClick, onCreateJobClick }) {
   return(
     <>
     <div style={{ paddingTop: '30px' }}>
-    <Hero onLoginClick={onLoginClick} onCreateJobClick={onCreateJobClick}/>
+    <Hero onLoginClick={onLoginClick} onCreateJobClick={onCreateJobClick} totalCount={totalCount} />
     </div>
     <SearchSection
       search={search}

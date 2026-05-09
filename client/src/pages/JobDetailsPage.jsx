@@ -8,7 +8,6 @@ export default function JobDetails( ) {
     const { user } = useAuth();
     const [job, setJob] = useState(null);
     const { id } = useParams();
-    console.log('id:', id);
 
     const [showApply, setShowApply] = useState(false);
 

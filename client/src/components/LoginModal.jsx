@@ -2,7 +2,6 @@ import { useAuth } from "../context/AuthContext";
 import { useState } from "react";
 
 export default function LoginModal({ onClose ,onSwitchToRegister }) {
-  console.log('LoginModal rendered');
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -38,9 +37,10 @@ export default function LoginModal({ onClose ,onSwitchToRegister }) {
           <button className="btn btn-primary" style={{ flex: 1 }} onClick={handleSubmit}>Sign In</button>
         </div>
         <div className="divider">or</div>
-        <p style={{ textAlign: 'center', fontSize: '13px', color: 'var(--ink2)' }}>
-          No account? <a href="#" style={{ color: 'var(--accent)', fontWeight: '500' }} onClick={onSwitchToRegister}>Register here</a>
-        </p>
+        <button 
+          style={{ color: 'var(--accent)', fontWeight: '500', background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontSize: '13px' }} 
+          onClick={onSwitchToRegister}
+        >Register here</button>
       </div>
     </div>
   );

@@ -8,6 +8,7 @@ import { useState } from 'react';
 import LoginModal from './components/LoginModal';
 import RegisterModal from './components/RegisterModal';
 import CreateJobModal from './components/CreateJobModal';
+import ProtectedRoute from './components/ProtectedRoute';
 
 import './App.css'
 
@@ -33,8 +34,12 @@ function App() {
             onCreateJobClick={() => setShowCreateJob(true)}
           />} 
         />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/jobs/:id" element={<JobDetails/>} />
+      <Route path="/dashboard" element={
+        <ProtectedRoute>
+          <Dashboard onCreateJobClick={() => setShowCreateJob(true)} />
+        </ProtectedRoute>
+      } />        
+      <Route path="/jobs/:id" element={<JobDetails/>} />
       </Routes>
 
       {showLogin && (

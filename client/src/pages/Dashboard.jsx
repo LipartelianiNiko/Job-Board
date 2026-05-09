@@ -4,11 +4,10 @@ import EmployerDashboard from '../components/EmployerDash';
 
 
 
-export default function Dashboard() {
+export default function Dashboard({ onCreateJobClick }) {
 
   const { user } = useAuth();
 
-  console.log(user);
 
   if (!user) {
     return <div>Please log in</div>;
@@ -19,8 +18,9 @@ export default function Dashboard() {
   }
 
   if (user.role === 'Employer') {
-    return <EmployerDashboard />;
+    return <EmployerDashboard onCreateJobClick={onCreateJobClick} />;
   }
+
 
   return <div>Unknown role</div>;
 }
