@@ -57,7 +57,7 @@ builder.Services.AddScoped<SavedJobsService>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReact", policy =>
-        policy.WithOrigins("http://localhost:3000")
+        policy.WithOrigins("http://localhost:3000", "https://job-board-dun-ten.vercel.app/")
               .AllowAnyHeader()
               .AllowAnyMethod());
 });
