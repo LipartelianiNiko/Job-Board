@@ -17,9 +17,19 @@ builder.Services.AddControllers()
     });;
 
 //register appdbcontext
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+//register appdbcontext
+var databaseUrl = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
+                  ?? builder.Configuration.GetConnectionString("DefaultConnection");
 
+if (databaseUrl != null && databaseUrl.StartsWith("postgresql://"))
+{
+    var uri = new Uri(databaseUrl);
+    var userInfo = uri.UserInfo.Split(':');
+    databaseUrl = $"Host={uri.Host};Port={uri.Port};Database={uri.AbsolutePath.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]};SSL Mode=Require;Trust Server Certificate=true";
+}
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(databaseUrl));
 var jwtKey = builder.Configuration["Jwt:Key"];//read jwt key from appsettings.json
 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
 
