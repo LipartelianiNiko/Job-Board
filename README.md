@@ -2,15 +2,15 @@
 
 A full-stack job board platform connecting job seekers and employers.
 
-**Live Demo:** [link]
+**Live Demo:** [https://job-board-dun-ten.vercel.app/]
 
 ---
 
 ## Tech Stack
 
-**Backend:** ASP.NET Core, C#, Entity Framework Core, PostgreSQL, JWT Authentication, BCrypt
+**Backend:** ASP.NET Core, C#, Entity Framework Core, PostgreSQL, JWT Authentication, BCrypt, deployed on Railway.app
 
-**Frontend:** React, Axios, React Router
+**Frontend:** React, Axios, React Router, deployed on Vercel
 
 ---
 
