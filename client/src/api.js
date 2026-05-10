@@ -4,7 +4,7 @@ import axios from 'axios';
 
 //declare where to connect
 const  API=axios.create({
-    baseURL:'http://localhost:5220/api',
+    baseURL:'https://vibrant-curiosity-production-a175.up.railway.app',
 })
 
 //get token and save in local storage
